@@ -1,10 +1,15 @@
 from django.db import models
 
 # Create your models here.
+from django.template.defaultfilters import slugify
+
 Job_Type = (
     ('Full Time1', 'Full Time'),
     ('Part Time1', 'Part Time'),
 )
+def image_upload(instance,filename):
+    imagename , extension = filename.split(".")
+    return "jobs/%s.%s"%(instance.id,extension)
 class job (models.Model) :
     titre = models.CharField(max_length=30)
     #location
@@ -16,6 +21,12 @@ class job (models.Model) :
     salary = models.IntegerField(default=0)
     experience = models.IntegerField(default=1)
     category = models.ForeignKey('Category',on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=image_upload)
+    slug = models.SlugField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.titre)
+        super(job, self).save(*args, **kwargs)
 
 
     def __str__(self):
