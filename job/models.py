@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -13,7 +14,7 @@ def image_upload(instance,filename):
 class job (models.Model) :
     titre = models.CharField(max_length=30)
     #location
-    #owner = models.Foreignkey(User, related_name='', on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, related_name='job_owner', on_delete=models.CASCADE)
     job_type = models.CharField(max_length=22, choices=Job_Type)
     description = models.TextField(max_length=10000)
     published_at = models.DateTimeField(auto_now=True)
